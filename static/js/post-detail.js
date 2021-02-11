@@ -60,7 +60,7 @@ const displayComments = (comms) => {
 const showaddForm = (ev) => {
     // get the form from the DOM and remove hide class
     console.log("click")
-    document.querySelector('#post-form').classList.remove("hide");
+    document.querySelector('#comment-form').classList.remove("hide");
 }
 
 const deleteComments2 = (ev) => {
@@ -243,8 +243,8 @@ const initializePage = () => {
     // add button event handler (right-hand corner:
     document.querySelector('#edit-button').onclick = renderForm;
     document.querySelector('#delete-button').onclick = deletePost;
-    //document.querySelector('#save').onclick = createComment;
-    //document.querySelector('#cancel').onclick = renderPost;
+    document.querySelector('#save').onclick = createComment;
+    document.querySelector('#cancel').onclick = renderPost;
 };
 
 initializePage();
