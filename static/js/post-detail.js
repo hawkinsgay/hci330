@@ -245,8 +245,8 @@ const initializePage = () => {
     // add button event handler (right-hand corner:
     document.querySelector('#edit-button').onclick = renderForm;
     document.querySelector('#delete-button').onclick = deletePost;
-    // document.querySelector('#save_com').onclick = createComment;
-    // document.querySelector('#cancel_com').onclick = renderPost;
+    document.querySelector('#save_com').onclick = createComment;
+    document.querySelector('#cancel_com').onclick = renderPost;
 };
 
 initializePage();
