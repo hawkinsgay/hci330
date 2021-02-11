@@ -131,3 +131,12 @@ main {
 .align-right a, .align-right btn {
     margin-left: 5px;
 }
+
+.align-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.align-left a, .align-left btn {
+    margin-left: 5px;
+}

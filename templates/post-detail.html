@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Tester</title>
+        <title>Hawkins_HCI330</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
         <link rel="stylesheet" href="/static/css/style.css">
     </head>
@@ -21,11 +21,41 @@
                 <section class="comments"></section>
             </div>
 
-            <!-- To edit the post -->
-            <form id="post-form" class="hide"></form>
+{#            <!-- To edit the post -->#}
+{#            <form id="post-form" class="hide"></form>#}
 
             <!-- TODO: Add the comments associated with this blog below: -->
 
+            <div id="comments">
+                <!-- Goal:
+                1. query comments endpoint: /api/comments
+                2. build html representation of each comment
+                3. inject those html nodes into this section: document.querySelector('#comments').innerHTML = "";
+                -->
+            </div>
+            <br>
+            <button class="add-comment" id="add-com" >Add Comment</button>
+
+            <div id="post-form" class="hide">
+                <h1>Add New Comment</h1>
+                <form id="post-form">
+                    <div class="input-section">
+                        <label for="comment">Comment</label>
+                        <textarea name="comment" id="comment"></textarea>
+                    </div>
+                    <div class="input-section">
+                        <label for="author">Author</label>
+                        <input type="text" name="author" id="author">
+                    </div>
+                    <button class="btn btn-main" id="save" type="submit">Save</button>
+                    <button class="btn" id="cancel" type="submit">Cancel</button>
+                </form>
+                <section id="confirmation" class="hide">
+                    <p>
+                        Your post was successfully added. <a href="/">Check it out</a>.
+                    </p>
+                </section>
+            </div>
 
 
         </main>

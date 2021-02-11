@@ -7,8 +7,12 @@ import json
 class CommentListEndpoint(Resource):
     
     def get(self):
-        #List all of the comments that are currently in my database:
-        data = models.Comment.objects
+        post_id = request.args.get('post_id')
+        if post_id:
+            #List all of the comments that are currently in my database:
+            data = models.Comment.objects.filter(post=post_id)
+        else:
+            data = models.Comment.objects
         data = data.to_json()
         return Response(data, mimetype="application/json", status=200)
 

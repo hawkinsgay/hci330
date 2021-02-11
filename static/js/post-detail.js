@@ -1,6 +1,7 @@
 
 let activePost;
 
+
 // gets post from the server:
 const getPost = () => {
     // get post id from url address:
@@ -17,6 +18,74 @@ const getPost = () => {
         });
 };
 
+const getComments = () => {
+    fetch('/api/comments/?post_id=' + id)
+        .then(response => {
+            return response.json();
+        })
+        .then(displayComments); // build HTML representation and inject it into the DOM
+};
+
+const displayComments = (comms) => {
+    console.log(comms);
+    const url = window.location.href;
+    counter = 0; // to count the number of comments
+    commentids=[];
+    num = url.substring(url.lastIndexOf('#') + 1);
+        let theHTML = '<h2>Comments</h2>';
+        for (const comment of comms) {
+            if (comment.post.$oid == num) {
+                counter += 1;
+                theHTML += `<section class="comment">
+            <p><strong>Comment ${counter}:</strong> ${comment.comment}</p>
+            <p></p><strong>Author:</strong> ${comment.author}</p>
+            </section>`
+                //buttons section - make a delte button
+                theHTML += `<button class="delete-comment" id="del-com" data-comment-id=${comment._id.$oid}>Delete Comment</button><br>`
+                commentids.push(comment._id.$oid);
+            }
+        }
+        counter=1
+        document.querySelector('#comments').innerHTML = theHTML
+
+        const commentButtons = document.querySelectorAll('.delete-comment');
+        for (const deleteButton of commentButtons)
+        {
+            //theid=deleteButton.getAttribute('data-comment-id')
+            deleteButton.onclick = deleteComments2;
+        }
+        document.querySelector('#add-com').onclick = showaddForm; // click the add-comment button, created on html sheet
+};
+// opens the form for adding a new comment
+const showaddForm = (ev) => {
+    // get the form from the DOM and remove hide class
+    console.log("click")
+    document.querySelector('#comment-form').classList.remove("hide");
+}
+
+const deleteComments2 = (ev) => {
+    const button = ev.currentTarget;
+    const commentID = button.getAttribute('data-comment-id');
+    const doIt = confirm('Are you sure you want to delete this comment?');
+    if (!doIt) {
+        return;
+    }
+    fetch('/api/comments/' + commentID + '/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        // navigate back to main page:
+        // window.location.href = '/';
+    });
+    ev.preventDefault()
+    window.location.reload();
+};
+
 // updates the post:
 const updatePost = (ev) => {
     const data = {
@@ -25,7 +94,7 @@ const updatePost = (ev) => {
         author: document.querySelector('#author').value
     };
     console.log(data);
-    fetch('/api/posts/' + activePost.id + '/', { 
+    fetch('/api/posts/' + activePost.id + '/', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +107,7 @@ const updatePost = (ev) => {
             renderPost();
             showConfirmation();
         });
-    
+
     // this line overrides the default form functionality:
     ev.preventDefault();
 };
@@ -58,16 +127,18 @@ const deletePost = (ev) => {
     .then(data => {
         console.log(data);
         // navigate back to main page:
-        window.location.href = '/';
+        //window.location.href = '/'; //**
     });
     ev.preventDefault()
+    window.location.reload();
 };
 
 // creates the HTML to display the post:
 const renderPost = (ev) => {
     const paragraphs = '<p>' + activePost.content.split('\n').join('</p><p>') + '</p>';
     const template = `
-        <p id="confirmation" class="hide"></p>
+            <p
+    } id="confirmation" class="hide"></p>
         <h1>${activePost.title}</h1>
         <div class="date">${formatDate(activePost.published)}</div>
         <div class="content">${paragraphs}</div>
@@ -134,13 +205,46 @@ const showConfirmation = () => {
     document.querySelector('#confirmation').innerHTML = 'Post successfully saved.';
 };
 
+const createComment = (ev) => {
+    const data = {
+        comment: document.querySelector('#comment').value,
+        author: document.querySelector('#author').value,
+        post: activePost.id
+    };
+    console.log(data);
+    fetch('/api/comments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(showConfirmation2);
+
+    // this line overrides the default form functionality:
+    ev.preventDefault();
+    window.location.reload();
+};
+
+const showConfirmation2 = (data) => {
+    console.log('response from the server:', data);
+    if (data.message && data.id) {
+        document.querySelector('#post-form').classList.toggle("hide");
+        document.querySelector('#confirmation').classList.toggle("hide");
+    }
+};
+
 // called when the page loads:
 const initializePage = () => {
-    // get the post from the server:
+    // get the post and comments from the server:
     getPost();
+    getComments();
     // add button event handler (right-hand corner:
     document.querySelector('#edit-button').onclick = renderForm;
     document.querySelector('#delete-button').onclick = deletePost;
+    //document.querySelector('#save').onclick = createComment;
+    //document.querySelector('#cancel').onclick = renderPost;
 };
 
 initializePage();

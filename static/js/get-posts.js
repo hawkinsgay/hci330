@@ -1,7 +1,7 @@
 const getPosts = () => {
     fetch('/api/posts')
         .then(response => response.json())
-        .then(displayPosts);
+        .then(displayPosts); // this is a call back function referencing the function below
 };
 
 const toHTMLElement = (post) => {
