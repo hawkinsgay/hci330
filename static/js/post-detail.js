@@ -60,7 +60,7 @@ const displayComments = (comms) => {
 const showaddForm = (ev) => {
     // get the form from the DOM and remove hide class
     console.log("click")
-    document.querySelector('#comment-form').classList.remove("hide");
+    document.querySelector('#post-form').classList.remove("hide");
 }
 
 const deleteComments2 = (ev) => {
